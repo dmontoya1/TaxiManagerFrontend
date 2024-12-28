@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Poppins:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos personalizados */
+body {
+  @apply bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white;
+  font-family: 'Inter', sans-serif;
+}
+
+@keyframes textGlow {
+  0%, 100% {
+    text-shadow: 0 0 10px #fff, 0 0 20px #facc15, 0 0 30px #facc15, 0 0 40px #facc15;
+  }
+  50% {
+    text-shadow: 0 0 20px #fff, 0 0 30px #facc15, 0 0 40px #facc15, 0 0 50px #facc15;
+  }
+}
+
+
+@layer utilities {
+  @media (max-width: 768px) {
+    .sidebar-collapsed {
+      width: 4rem;
+    }
+  }
+}
+
+.animate-text {
+  animation: textGlow 2s infinite;
+}
+
+main {
+  background: linear-gradient(to bottom right, #1e293b, #111827);
+  min-height: 100vh;
+}
