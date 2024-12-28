@@ -2,27 +2,38 @@ import API from "./api";
 
 // Listar ingresos
 export const fetchIncomes = async () => {
-  const response = await API.get("/incomes/");
+  const response = await API.get("/transactions/incomes/");
   return response.data;
 };
 
 // Crear ingreso
-export const createIncome = async (incomeData: { amount: number; description: string; date: string }) => {
-  const response = await API.post("/incomes/", incomeData);
+// Crear ingreso
+export const createIncome = async (incomeData: {
+  amount: string;
+  date: string;
+  payment_method: string;
+  description: string;
+}) => {
+  const response = await API.post("/transactions/incomes/", incomeData);
   return response.data;
 };
 
 // Actualizar ingreso
 export const updateIncome = async (
   id: number,
-  incomeData: { amount: number; description: string; date: string }
+  incomeData: {
+    amount: string;
+    date: string;
+    payment_method: string;
+    description: string;
+  }
 ) => {
-  const response = await API.put(`/incomes/${id}/`, incomeData);
+  const response = await API.put(`/transactions/incomes/${id}/`, incomeData);
   return response.data;
 };
 
 // Eliminar ingreso
 export const deleteIncome = async (id: number) => {
-  const response = await API.delete(`/incomes/${id}/`);
+  const response = await API.delete(`/transactions/incomes/${id}/`);
   return response.data;
 };

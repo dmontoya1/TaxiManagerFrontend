@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { FiMenu, FiHome, FiDollarSign, FiFileText, FiLogOut } from "react-icons/fi";
 
 interface SidebarProps {
@@ -8,6 +9,16 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
+  const router = useRouter();
+
+  const menuItems = [
+    { name: "Inicio", path: "/dashboard", icon: <FiHome size={20} /> },
+    { name: "Ingresos", path: "/dashboard/incomes", icon: <FiDollarSign size={20} /> },
+    { name: "Gastos", path: "/dashboard/expenses", icon: <FiDollarSign size={20} /> },
+    { name: "Reportes", path: "/dashboard/reports", icon: <FiFileText size={20} /> },
+    { name: "Cerrar Sesión", path: "/logout", icon: <FiLogOut size={20} /> },
+  ];
+
   return (
     <motion.div
       initial={{ width: isCollapsed ? "4rem" : "16rem" }}
@@ -38,96 +49,31 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
       {/* Navegación */}
       <nav className="mt-6">
         <ul className="space-y-4">
-          <li>
-            <Link
-              href="/dashboard"
-              className="flex items-center px-4 py-2 hover:bg-gray-700 rounded"
-            >
-              <FiHome size={20} />
-              <motion.span
-                initial={{ opacity: isCollapsed ? 0 : 1 }}
-                animate={{ opacity: isCollapsed ? 0 : 1 }}
-                transition={{ duration: 0.2 }}
-                className={`ml-4 text-sm font-medium ${
-                  isCollapsed && "hidden"
-                }`}
-              >
-                Inicio
-              </motion.span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/dashboard/incomes"
-              className="flex items-center px-4 py-2 hover:bg-gray-700 rounded"
-            >
-              <FiDollarSign size={20} />
-              <motion.span
-                initial={{ opacity: isCollapsed ? 0 : 1 }}
-                animate={{ opacity: isCollapsed ? 0 : 1 }}
-                transition={{ duration: 0.2 }}
-                className={`ml-4 text-sm font-medium ${
-                  isCollapsed && "hidden"
-                }`}
-              >
-                Ingresos
-              </motion.span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/dashboard/expenses"
-              className="flex items-center px-4 py-2 hover:bg-gray-700 rounded"
-            >
-              <FiDollarSign size={20} />
-              <motion.span
-                initial={{ opacity: isCollapsed ? 0 : 1 }}
-                animate={{ opacity: isCollapsed ? 0 : 1 }}
-                transition={{ duration: 0.2 }}
-                className={`ml-4 text-sm font-medium ${
-                  isCollapsed && "hidden"
-                }`}
-              >
-                Gastos
-              </motion.span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/dashboard/reports"
-              className="flex items-center px-4 py-2 hover:bg-gray-700 rounded"
-            >
-              <FiFileText size={20} />
-              <motion.span
-                initial={{ opacity: isCollapsed ? 0 : 1 }}
-                animate={{ opacity: isCollapsed ? 0 : 1 }}
-                transition={{ duration: 0.2 }}
-                className={`ml-4 text-sm font-medium ${
-                  isCollapsed && "hidden"
-                }`}
-              >
-                Reportes
-              </motion.span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/logout"
-              className="flex items-center px-4 py-2 hover:bg-gray-700 rounded"
-            >
-              <FiLogOut size={20} />
-              <motion.span
-                initial={{ opacity: isCollapsed ? 0 : 1 }}
-                animate={{ opacity: isCollapsed ? 0 : 1 }}
-                transition={{ duration: 0.2 }}
-                className={`ml-4 text-sm font-medium ${
-                  isCollapsed && "hidden"
-                }`}
-              >
-                Cerrar Sesión
-              </motion.span>
-            </Link>
-          </li>
+          {menuItems.map((item) => (
+            <li key={item.name}>
+              <Link href={item.path}>
+                <div
+                  className={`flex items-center px-4 py-2 rounded transition-colors cursor-pointer ${
+                    router.pathname === item.path
+                      ? "bg-gray-700 text-white"
+                      : "hover:bg-gray-700"
+                  }`}
+                >
+                  {item.icon}
+                  <motion.span
+                    initial={{ opacity: isCollapsed ? 0 : 1 }}
+                    animate={{ opacity: isCollapsed ? 0 : 1 }}
+                    transition={{ duration: 0.2 }}
+                    className={`ml-4 text-sm font-medium ${
+                      isCollapsed && "hidden"
+                    }`}
+                  >
+                    {item.name}
+                  </motion.span>
+                </div>
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
     </motion.div>

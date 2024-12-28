@@ -1,60 +1,57 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { login } from "../../services/auth";
-import Input from "../common/Input";
-import Button from "../common/Button";
 
 export default function LoginForm() {
-  const [formData, setFormData] = useState({ username: "", password: "" });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [credentials, setCredentials] = useState({ username: "", password: "" });
+  const [error, setError] = useState("");
 
-  const handleLogin = async () => {
-    setIsLoading(true);
-    setError(null);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      await login(formData);
+      // Autenticar al usuario y almacenar el token
+      await login(credentials);
+
+      // Redirigir al Dashboard
       router.push("/dashboard");
-    } catch (err: any) {
-      setError("Credenciales incorrectas. Por favor, intenta de nuevo.");
-    } finally {
-      setIsLoading(false);
+    } catch (err) {
+      // Mostrar mensaje de error
+      setError("Credenciales inválidas. Por favor, inténtalo de nuevo.");
     }
   };
 
   return (
-    <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-      {/* Usuario */}
-      <Input
-        label="Usuario"
-        type="text"
-        value={formData.username}
-        onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-        placeholder="Introduce tu usuario"
-      />
+    <form onSubmit={handleSubmit}>
+      <div className="space-y-4">
+        {/* Campo de username */}
+        <input
+          type="text"
+          placeholder="Nombre de usuario"
+          className="w-full p-3 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          value={credentials.username}
+          onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+        />
+        {/* Campo de contraseña */}
+        <input
+          type="password"
+          placeholder="Contraseña"
+          className="w-full p-3 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          value={credentials.password}
+          onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+        />
+      </div>
 
-      {/* Contraseña */}
-      <Input
-        label="Contraseña"
-        type="password"
-        value={formData.password}
-        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-        placeholder="Introduce tu contraseña"
-      />
-
-      {/* Error */}
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-
-      {/* Botón */}
-      <Button
-        onClick={handleLogin}
-        isLoading={isLoading}
+      {/* Botón de envío */}
+      <button
         type="submit"
-        variant="primary"
+        className="w-full mt-6 bg-yellow-400 text-black p-3 rounded hover:bg-yellow-500 transition font-bold"
       >
-        Entrar
-      </Button>
+        Iniciar Sesión
+      </button>
+
+      {/* Mensaje de error */}
+      {error && <p className="text-red-500 text-center mt-4">{error}</p>}
     </form>
   );
 }

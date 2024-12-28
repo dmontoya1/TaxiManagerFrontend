@@ -1,14 +1,17 @@
-import api from "./api";
+import API from "./api";
 
 export interface LoginData {
   username: string;
   password: string;
 }
 
-export const login = async (data: LoginData) => {
-  const response = await api.post("/accounts/login/", data);
-  localStorage.setItem("access_token", response.data.access);
-  localStorage.setItem("refresh_token", response.data.refresh);
+export const login = async (credentials: { username: string; password: string }) => {
+  const response = await API.post("/accounts/login/", credentials);
+  const { access } = response.data;
+
+  // Guardar el token en localStorage
+  localStorage.setItem("access_token", access);
+
   return response.data;
 };
 
@@ -21,5 +24,5 @@ export interface RegisterData {
 }
 
 export const register = async (data: RegisterData) => {
-  return await api.post("/accounts/register/", data);
+  return await API.post("/accounts/register/", data);
 };
