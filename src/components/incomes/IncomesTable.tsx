@@ -6,7 +6,7 @@ import { formatPaymentMethod, formatDate } from "../../utils/format";
 
 interface Income {
   id: number;
-  amount: number;
+  amount: string;
   date: string;
   payment_method: string;
   description: string;
@@ -14,49 +14,24 @@ interface Income {
 
 export default function IncomesTable() {
   const [incomes, setIncomes] = useState<Income[]>([]);
-  const [methodFilter, setMethodFilter] = useState<string>(""); // Filtro por método
-  const [startDateFilter, setStartDateFilter] = useState<string>(""); // Filtro por fecha inicial
-  const [endDateFilter, setEndDateFilter] = useState<string>(""); // Filtro por fecha final
+  const [filter, setFilter] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedIncome, setSelectedIncome] = useState<Income | null>(null);
 
-  // Fetch los ingresos desde el backend
-  useEffect(() => {
-    const loadIncomes = async () => {
-      const data = await fetchIncomes();
-      setIncomes(data);
-    };
-    loadIncomes();
-  }, []);
+  // Estados para la paginación
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
+  const [pageSize] = useState<number>(10);
 
-  // Aplicar filtros combinados
-  const filteredIncomes = incomes.filter((income) => {
-    const matchesMethod =
-      !methodFilter || income.payment_method.includes(methodFilter);
-
-    const matchesDate =
-      (!startDateFilter || income.date >= startDateFilter) &&
-      (!endDateFilter || income.date <= endDateFilter);
-
-    return matchesMethod && matchesDate;
-  });
-
-  // Calcular totales dinámicamente
-  const calculateTotals = () => {
-    const totalCash = filteredIncomes
-      .filter((income) => income.payment_method === "cash")
-      .reduce((sum, income) => sum + parseFloat(income.amount), 0);
-
-    const totalCard = filteredIncomes
-      .filter((income) => income.payment_method === "card")
-      .reduce((sum, income) => sum + parseFloat(income.amount), 0);
-
-    const total = totalCash + totalCard;
-
-    return { totalCash, totalCard, total };
+  const loadIncomes = async (page: number) => {
+    const data = await fetchIncomes({ page, page_size: pageSize });
+    setIncomes(data.results);
+    setTotalItems(data.count); // Total de ingresos
   };
 
-  const { totalCash, totalCard, total } = calculateTotals();
+  useEffect(() => {
+    loadIncomes(currentPage);
+  }, [currentPage]);
 
   const handleEdit = (income: Income) => {
     setSelectedIncome(income);
@@ -64,8 +39,8 @@ export default function IncomesTable() {
   };
 
   const handleIncomeUpdated = (updatedIncome: Income) => {
-    setIncomes(
-      incomes.map((income) =>
+    setIncomes((prev) =>
+      prev.map((income) =>
         income.id === updatedIncome.id ? updatedIncome : income
       )
     );
@@ -73,41 +48,27 @@ export default function IncomesTable() {
     setSelectedIncome(null);
   };
 
-  const handleIncomeAdded = (newIncome: Income) => {
-    setIncomes((prevIncomes) => [...prevIncomes, newIncome]);
+  const handleIncomeAdded = () => {
+    loadIncomes(currentPage); // Recargar la página actual
     setIsModalOpen(false);
     setSelectedIncome(null);
   };
 
+  const totalPages = Math.ceil(totalItems / pageSize);
+
   return (
     <div className="p-4 bg-gray-900 text-white">
-      <div className="flex justify-between items-center mb-4 space-x-4">
-        {/* Filtro por método */}
+      <div className="flex justify-between items-center mb-4">
+        {/* Filtro */}
         <select
           className="p-2 bg-gray-800 text-white rounded"
-          value={methodFilter}
-          onChange={(e) => setMethodFilter(e.target.value)}
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
         >
           <option value="">Todos</option>
           <option value="cash">Efectivo</option>
           <option value="card">Tarjeta</option>
         </select>
-
-        {/* Filtros por fechas */}
-        <input
-          type="date"
-          className="p-2 bg-gray-800 text-white rounded"
-          value={startDateFilter}
-          onChange={(e) => setStartDateFilter(e.target.value)}
-          placeholder="Desde"
-        />
-        <input
-          type="date"
-          className="p-2 bg-gray-800 text-white rounded"
-          value={endDateFilter}
-          onChange={(e) => setEndDateFilter(e.target.value)}
-          placeholder="Hasta"
-        />
 
         {/* Botón para agregar ingreso */}
         <button
@@ -127,23 +88,17 @@ export default function IncomesTable() {
           <tr>
             <th className="p-2">Fecha</th>
             <th className="p-2">Cantidad (€)</th>
-            <th className="p-2">Método de Pago</th>
+            <th className="p-2">Método</th>
             <th className="p-2">Descripción</th>
             <th className="p-2">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {filteredIncomes.map((income) => (
+          {incomes.map((income) => (
             <tr key={income.id} className="border-b border-gray-700">
               <td className="p-2">{formatDate(income.date)}</td>
-              <td className="p-2">
-                {isNaN(Number(income.amount))
-                  ? "0.00"
-                  : Number(income.amount).toFixed(2)}
-              </td>
-              <td className="p-2 capitalize">
-                {formatPaymentMethod(income.payment_method)}
-              </td>
+              <td className="p-2">{Number(income.amount).toFixed(2)}</td>
+              <td className="p-2 capitalize">{formatPaymentMethod(income.payment_method)}</td>
               <td className="p-2">{income.description}</td>
               <td className="p-2">
                 <button onClick={() => handleEdit(income)}>
@@ -156,15 +111,32 @@ export default function IncomesTable() {
             </tr>
           ))}
         </tbody>
-        <tfoot className="bg-gray-800">
-          <tr>
-            <td className="p-2 font-bold text-yellow-400" colSpan={5}>
-              Total Efectivo: €{totalCash.toFixed(2)} | Total Tarjeta: €
-              {totalCard.toFixed(2)} | Total General: €{total.toFixed(2)}
-            </td>
-          </tr>
-        </tfoot>
       </table>
+
+      {/* Paginación */}
+      <div className="flex justify-between items-center mt-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          className={`px-4 py-2 bg-gray-700 text-white rounded ${
+            currentPage === 1 && "opacity-50 cursor-not-allowed"
+          }`}
+          disabled={currentPage === 1}
+        >
+          Anterior
+        </button>
+        <span>
+          Página {currentPage} de {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+          className={`px-4 py-2 bg-gray-700 text-white rounded ${
+            currentPage === totalPages && "opacity-50 cursor-not-allowed"
+          }`}
+          disabled={currentPage === totalPages}
+        >
+          Siguiente
+        </button>
+      </div>
 
       {/* Modal para editar o agregar ingreso */}
       {isModalOpen && (

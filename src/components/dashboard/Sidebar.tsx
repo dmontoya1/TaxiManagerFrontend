@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FiMenu, FiHome, FiDollarSign, FiFileText, FiLogOut } from "react-icons/fi";
+import { FiMenu, FiHome, FiDollarSign, FiFileText, FiLogOut, FiSettings } from "react-icons/fi";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -16,6 +16,7 @@ export default function Sidebar({ isCollapsed, setIsCollapsed }: SidebarProps) {
     { name: "Ingresos", path: "/dashboard/incomes", icon: <FiDollarSign size={20} /> },
     { name: "Gastos", path: "/dashboard/expenses", icon: <FiDollarSign size={20} /> },
     { name: "Reportes", path: "/dashboard/reports", icon: <FiFileText size={20} /> },
+    { name: "Configuración", path: "/dashboard/config", icon: <FiSettings size={20} /> },
     { name: "Cerrar Sesión", path: "/logout", icon: <FiLogOut size={20} /> },
   ];
 

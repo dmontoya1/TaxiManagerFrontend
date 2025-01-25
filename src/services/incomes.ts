@@ -1,9 +1,14 @@
 import API from "./api";
 
 // Listar ingresos
-export const fetchIncomes = async () => {
-  const response = await API.get("/transactions/incomes/");
-  return response.data;
+export const fetchIncomes = async (params: { page: number; page_size: number }) => {
+  const response = await API.get("/transactions/incomes/", { params });
+  return {
+    results: response.data.results, // Lista de ingresos
+    count: response.data.count, // Total de ingresos
+    next: response.data.next, // Link a la siguiente página (si existe)
+    previous: response.data.previous, // Link a la página anterior (si existe)
+  };
 };
 
 // Crear ingreso

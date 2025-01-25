@@ -5,14 +5,14 @@ import { toast } from "react-toastify";
 interface ExpenseFormModalProps {
   expense?: {
     id: number;
-    amount: number;
-    date: string;
+    amount: string; // El backend devuelve el amount como string
     category: string;
     description: string;
+    date: string;
   };
   onClose: () => void;
   onExpenseUpdated?: (expense: any) => void;
-  onExpenseAdded?: (expense: any) => void; // Se ejecuta al agregar un nuevo gasto
+  onExpenseAdded?: (expense: any) => void;
 }
 
 export default function ExpenseFormModal({

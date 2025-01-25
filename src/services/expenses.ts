@@ -1,9 +1,17 @@
 import API from "./api";
 
+export interface Expense {
+  id: number;
+  amount: string; // El backend devuelve el amount como string
+  category: string;
+  description: string;
+  date: string;
+}
+
 // Listar gastos
-export const fetchExpenses = async () => {
+export const fetchExpenses = async (): Promise<Expense[]> => {
   const response = await API.get("/transactions/expenses/");
-  return response.data;
+  return response.data.results; // Extraer el array de gastos del campo "results"
 };
 
 // Crear gasto

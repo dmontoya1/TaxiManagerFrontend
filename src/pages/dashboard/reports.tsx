@@ -1,13 +1,12 @@
 import ProtectedRoute from "../../components/auth/ProtectedRoute";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
-import IncomesTable from "../../components/incomes/IncomesTable";
+import ReportsTable from "../../components/reports/ReportsTable";
 
-export default function IncomesPage() {
+export default function ReportsPage() {
   return (
     <ProtectedRoute allowedRoles={["driver", "boss"]}>
       <DashboardLayout>
-        <h1 className="text-2xl font-bold text-yellow-400 mb-4">Ingresos</h1>
-        <IncomesTable />
+        <ReportsTable />
       </DashboardLayout>
     </ProtectedRoute>
   );

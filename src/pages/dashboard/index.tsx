@@ -13,7 +13,7 @@ const PieChart = dynamic(() => import("../../components/charts/PieChart"), {
 
 export default function DashboardHome() {
   return (
-    <ProtectedRoute>
+    <ProtectedRoute allowedRoles={["driver", "boss"]}>
       <DashboardLayout>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Resumen de Métricas */}
@@ -45,7 +45,7 @@ export default function DashboardHome() {
             <p className="text-3xl font-bold mt-2">€400.00</p>
           </motion.div>
         </div>
-
+        
         {/* Gráficos */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
           {/* Gráfico de Barras */}
@@ -58,7 +58,7 @@ export default function DashboardHome() {
             <h3 className="text-lg font-bold mb-4">Ingresos y Gastos Mensuales</h3>
             <BarChart />
           </motion.div>
-
+          
           {/* Gráfico Circular */}
           <motion.div
             className="bg-gray-800 text-white rounded-lg p-6 shadow-lg"
