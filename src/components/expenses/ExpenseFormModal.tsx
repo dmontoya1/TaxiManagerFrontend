@@ -2,17 +2,19 @@ import React, { useState, useEffect } from "react";
 import { createExpense, updateExpense } from "../../services/expenses";
 import { toast } from "react-toastify";
 
+interface Expense {
+  id: number;
+  amount: string;
+  date: string;
+  category: string;
+  description: string;
+}
+
 interface ExpenseFormModalProps {
-  expense?: {
-    id: number;
-    amount: string;
-    date: string;
-    category: string;
-    description: string;
-  };
+  expense?: Expense;
   onClose: () => void;
-  onExpenseUpdated?: (expense: { id: number; amount: string; date: string; category: string; description: string }) => void;
-  onExpenseAdded?: (expense: { id: number; amount: string; date: string; category: string; description: string }) => void;
+  onExpenseUpdated?: (expense: Expense) => void;
+  onExpenseAdded?: (expense: Expense) => void;
 }
 
 export default function ExpenseFormModal({

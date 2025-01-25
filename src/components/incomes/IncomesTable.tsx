@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { fetchIncomes } from "../../services/incomes";
 import IncomeFormModal from "./IncomeFormModal";
 import { FiEdit2 } from "react-icons/fi";
@@ -22,16 +22,16 @@ export default function IncomesTable() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [pageSize] = useState<number>(10);
-
-  const loadIncomes = async (page: number) => {
+  
+  const loadIncomes = useCallback(async (page: number) => {
     const data = await fetchIncomes({ page, page_size: pageSize });
     setIncomes(data.results);
-    setTotalItems(data.count); // Total de ingresos
-  };
-
+    setTotalItems(data.count);
+  }, [pageSize]);
+  
   useEffect(() => {
     loadIncomes(currentPage);
-  }, [currentPage]);
+  }, [currentPage, loadIncomes]);
 
   const handleEdit = (income: Income) => {
     setSelectedIncome(income);

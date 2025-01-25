@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { fetchReports } from "../../services/reports";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -16,7 +16,7 @@ export default function ReportsTable() {
   const [endDate, setEndDate] = useState<Date | null>(null);
   
   // Fetch los reportes desde el backend
-  const loadReports = async () => {
+  const loadReports = useCallback(async () => {
     try {
       const data = await fetchReports(
         date?.toISOString().split("T")[0],
@@ -29,11 +29,11 @@ export default function ReportsTable() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [date, startDate, endDate]);
   
   useEffect(() => {
     loadReports();
-  }, [date, startDate, endDate]);
+  }, [loadReports]);
   
   return (
     <div className="p-4 bg-gray-900 text-white">

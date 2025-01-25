@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { createIncome, updateIncome } from "../../services/incomes";
 
+interface Income {
+  id: number;
+  amount: string;
+  date: string;
+  payment_method: string;
+  description: string;
+}
+
 interface IncomeFormModalProps {
-  income?: {
-    id: number;
-    amount: number;
-    date: string;
-    payment_method: string;
-    description: string;
-  };
+  income?: Income;
   onClose: () => void;
-  onIncomeUpdated?: (income: any) => void;
-  onIncomeAdded?: (income: any) => void;
+  onIncomeUpdated?: (income: Income) => void;
+  onIncomeAdded?: (income: Income) => void;
 }
 
 export default function IncomeFormModal({
