@@ -64,8 +64,7 @@ export default function IncomeFormModal({
         onIncomeAdded?.(newIncome);
       }
       onClose();
-    } catch (error) {
-      // @ts-ignore
+    } catch (error: any) {
       if (error.response && error.response.data) {
         setErrors(error.response.data); // Guardar errores del servidor
       } else {

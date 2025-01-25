@@ -16,7 +16,7 @@ export default function IncomesTable() {
   const [incomes, setIncomes] = useState<Income[]>([]);
   const [filter, setFilter] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedIncome, setSelectedIncome] = useState<Income | null>(null);
+  const [selectedIncome, setSelectedIncome] = useState<Income | undefined>(undefined);
 
   // Estados para la paginación
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -45,13 +45,13 @@ export default function IncomesTable() {
       )
     );
     setIsModalOpen(false);
-    setSelectedIncome(null);
+    setSelectedIncome(undefined);
   };
 
   const handleIncomeAdded = () => {
     loadIncomes(currentPage); // Recargar la página actual
     setIsModalOpen(false);
-    setSelectedIncome(null);
+    setSelectedIncome(undefined);
   };
 
   const totalPages = Math.ceil(totalItems / pageSize);
@@ -74,7 +74,7 @@ export default function IncomesTable() {
         <button
           onClick={() => {
             setIsModalOpen(true);
-            setSelectedIncome(null);
+            setSelectedIncome(undefined);
           }}
           className="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500 transition"
         >
@@ -144,7 +144,7 @@ export default function IncomesTable() {
           income={selectedIncome}
           onClose={() => {
             setIsModalOpen(false);
-            setSelectedIncome(null);
+            setSelectedIncome(undefined);
           }}
           onIncomeUpdated={handleIncomeUpdated}
           onIncomeAdded={handleIncomeAdded}

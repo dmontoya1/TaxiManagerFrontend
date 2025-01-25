@@ -15,7 +15,7 @@ interface Expense {
 export default function ExpensesTable() {
   const [expenses, setExpenses] = useState<Expense[]>([]); // Inicializar como array vacío
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
+  const [selectedExpense, setSelectedExpense] = useState<Expense | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true); // Estado de carga
   
   // Fetch los gastos desde el backend
@@ -77,13 +77,13 @@ export default function ExpensesTable() {
       )
     );
     setIsModalOpen(false);
-    setSelectedExpense(null);
+    setSelectedExpense(undefined);
   };
   
   const handleExpenseAdded = (newExpense: Expense) => {
     setExpenses([...expenses, newExpense]);
     setIsModalOpen(false);
-    setSelectedExpense(null);
+    setSelectedExpense(undefined);
   };
   
   return (
@@ -93,7 +93,7 @@ export default function ExpensesTable() {
         <button
           onClick={() => {
             setIsModalOpen(true);
-            setSelectedExpense(null);
+            setSelectedExpense(undefined);
           }}
           className="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500 transition"
         >
@@ -145,7 +145,7 @@ export default function ExpensesTable() {
           expense={selectedExpense}
           onClose={() => {
             setIsModalOpen(false);
-            setSelectedExpense(null);
+            setSelectedExpense(undefined);
           }}
           onExpenseUpdated={handleExpenseUpdated}
           onExpenseAdded={handleExpenseAdded}
