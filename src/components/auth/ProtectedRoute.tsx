@@ -5,32 +5,29 @@ import API from "../../services/api";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  allowedRoles?: ("driver" | "boss")[]; // Roles permitidos
+  allowedRoles?: ("driver" | "boss")[]; // Asegúrate de usar esta prop
 }
 
 export default function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  console.log(allowedRoles);
   
   useEffect(() => {
     const token = localStorage.getItem("access_token");
-    const role = localStorage.getItem("user_role");
     
     const validateToken = async () => {
       if (!token) {
-        // Redirigir al login si no hay token
         router.push("/login");
         return;
       }
       
       try {
-        // Verificar si el token es válido
-        await API.get("/accounts/validate-token/"); // Asegúrate de que este endpoint exista en el backend
+        await API.get("/accounts/validate-token/");
         setIsLoading(false);
       } catch (error) {
-        // Si el token no es válido, redirigir al login
+        console.log(error);
         localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
         localStorage.removeItem("user_role");
         router.push("/login");
         toast.error("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");

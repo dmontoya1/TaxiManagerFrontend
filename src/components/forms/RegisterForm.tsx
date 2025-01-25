@@ -28,7 +28,8 @@ export default function RegisterForm() {
       await register(formData);
       alert("Registro exitoso. Por favor, inicia sesión.");
       router.push("/login");
-    } catch (err: any) {
+    } catch (err) {
+      console.error("Error al registrar:", err);
       setError("Ocurrió un error. Por favor, inténtalo de nuevo.");
     } finally {
       setIsLoading(false);

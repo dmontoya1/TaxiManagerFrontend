@@ -26,6 +26,12 @@ export const login = async (credentials: LoginData) => {
   return response.data;
 };
 
-export const register = async (data: RegisterData) => {
+export const register = async (data: {
+  username: string;
+  email: string;
+  password: string;
+  password2: string;
+  phone: string
+}) => {
   return await API.post("/accounts/register/", data);
 };

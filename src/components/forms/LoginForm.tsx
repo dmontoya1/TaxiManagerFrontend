@@ -17,6 +17,7 @@ export default function LoginForm() {
       router.push("/dashboard");
     } catch (err) {
       // Mostrar mensaje de error
+      console.error("Error al iniciar sesión:", err);
       setError("Credenciales inválidas. Por favor, inténtalo de nuevo.");
     }
   };

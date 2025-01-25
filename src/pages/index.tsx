@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function HomePage() {
   return (
@@ -29,10 +30,13 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-gray-800 opacity-70"></div>
         
         {/* Imagen con ajustes de posición */}
-        <img
+        <Image
           src="/images/taxi-modern.jpg"
           alt="Taxi en España"
-          className="w-full h-[500px] object-cover object-center md:object-top lg:object-center"></img>
+          width={1200}
+          height={500}
+          className="w-full h-[500px] object-cover object-center md:object-top lg:object-center"
+        />
         
         {/* Texto superpuesto */}
         <div className="absolute inset-0 flex items-center justify-center">
