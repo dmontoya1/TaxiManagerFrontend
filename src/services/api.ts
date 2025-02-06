@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: 'https://backend-159812486596.us-central1.run.app/api',
+  baseURL: 'https://taximanager-backend-1060073980134.us-central1.run.app/api',
   headers: {
     "Content-Type": "application/json",
   },

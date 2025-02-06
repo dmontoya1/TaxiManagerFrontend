@@ -1,0 +1,27 @@
+steps:
+  # Paso 1: Construir y subir la imagen usando Buildx para forzar linux/amd64
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - "buildx"
+      - "build"
+      - "--platform"
+      - "linux/amd64"
+      - "-t"
+      - "gcr.io/taximanager-prod/taximanager-frontend"
+      - "--push"
+      - "."
+
+  # Paso 2: Desplegar el servicio en Cloud Run usando gcloud
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: "bash"
+    args:
+      - "-c"
+      - |
+        gcloud run deploy taximanager-frontend \
+          --image gcr.io/taximanager-prod/taximanager-frontend \
+          --platform managed \
+          --region us-central1 \
+          --allow-unauthenticated \
+          --update-env-vars=NEXT_PUBLIC_BACKEND_URL="https://taximanager-backend-<hash>-uc.a.run.app"
+images:
+  - "gcr.io/taximanager-prod/taximanager-frontend"
